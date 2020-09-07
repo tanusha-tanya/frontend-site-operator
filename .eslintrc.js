@@ -2,20 +2,23 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true
+    node: true,
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: "babel-eslint",
   },
   extends: [
-    '@nuxtjs',
-    'plugin:nuxt/recommended'
+    "@nuxtjs",
+    "plugin:nuxt/recommended",
+    "plugin:prettier/recommended",
+    "prettier",
+    "prettier/vue",
   ],
-  plugins: [
-  ],
+  plugins: ["prettier"],
   // add your custom rules here
   rules: {
     "no-console": "off",
-    "no-debugger": "off"
-  }
-}
+    "no-debugger": "off",
+    "vue/no-v-html": "off",
+  },
+};
