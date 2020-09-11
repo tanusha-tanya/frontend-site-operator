@@ -1,0 +1,60 @@
+image: toby1991/laravel-envoy
+
+
+stages:
+  - deploy
+
+deploy_main:
+  stage: deploy
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_EXTYL_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+    - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA" --branch="master" --app_dir="/home/bitrix/app/main-fr-oper"
+  environment:
+    name: master
+    url: https://main-fr-oper.ec.extyl.pro/
+  when: manual
+  only:
+    - master
+  tags:
+    - dev
+
+deploy_stage:
+  stage: deploy
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_EXTYL_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+    - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA" --branch="stage" --app_dir="/home/ec/app/stage-fr-oper"
+  environment:
+    name: stage
+    url: https://stage-fr-oper.ec.extyl.pro/
+  only:
+    - stage
+  tags:
+    - dev
+
+deploy_test:
+  stage: deploy
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_EXTYL_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+    - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA" --branch="test" --app_dir="/home/bitrix/app/test-fr-oper"
+  environment:
+    name: stage
+    url: https://test-fr-oper.ec.extyl.pro/
+  only:
+    - test
+  tags:
+    - dev
