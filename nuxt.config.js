@@ -60,6 +60,11 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    ['@mole-inc/nuxt-validate',
+      {
+        lang: 'ru',
+      }
+    ]
   ],
   /*
    ** Axios module configuration
@@ -90,8 +95,8 @@ export default {
           secondary: colors.cyan.darken3,
           info: colors.cyan.lighten1,
           warning: colors.cyan.base,
-          error: colors.cyan.accent4,
-          success: colors.cyan.accent3,
+          error: colors.red.accent4,
+          success: colors.cyan.accent4,
         },
       },
     },
