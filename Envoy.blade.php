@@ -1,7 +1,7 @@
 @servers(['extyl-dev' => 'ec@192.168.101.33'])
 
 @setup
-    $repository = 'git@gitlab.com:extyl-dev/expert-cable/frontend/frontend-site-operator.git;
+    $repository = 'git@gitlab.com:extyl-dev/expert-cable/frontend/frontend-site-operator.git';
     $releases_dir = $app_dir .'/releases';
     $release = date('YmdHis');
     $new_release_dir = $releases_dir .'/'. $release;
