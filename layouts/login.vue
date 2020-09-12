@@ -10,9 +10,6 @@
         </v-container>
       </v-scroll-y-transition>
     </v-main>
-    <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
   </v-app>
 </template>
 
@@ -65,5 +62,6 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    user-select: none;
   }
 </style>

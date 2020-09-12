@@ -7,18 +7,21 @@
       </div>
       <ValidationObserver ref="observer">
         <form ref="form" class="authorization__form">
-          <ValidationProvider
-            v-slot="{ errors }"
-            name="Логин"
-            rules="required|email"
-          >
+          <ValidationProvider v-slot="{ errors }" name="Логин" rules="required">
             <v-text-field
-              ref="email"
+              ref="emailInput"
               v-model="login"
               :error-messages="errors"
               type="text"
               label="Логин"
               required
+              readonly
+              @focus="
+                () => {
+                  const input = $refs.emailInput.$el.querySelector('input')
+                  input.removeAttribute('readonly')
+                }
+              "
             ></v-text-field>
           </ValidationProvider>
           <ValidationProvider
@@ -37,7 +40,19 @@
           </ValidationProvider>
           <v-row>
             <v-col>
-              <v-btn color="success" class="mr-4" @click="submit">Войти</v-btn>
+              <v-checkbox
+                v-model="rememberMe"
+                class="mt-0 pt-0"
+                label="Запомнить меня"
+                hide-details
+              ></v-checkbox>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-btn color="success" class="mr-4" @click="authorization">
+                Войти
+              </v-btn>
             </v-col>
           </v-row>
         </form>
@@ -68,8 +83,9 @@
     layout: 'login',
     data() {
       return {
-        login: '',
-        password: '',
+        rememberMe: false,
+        login: 'dummy',
+        password: '123456',
       }
     },
     validations: {
@@ -77,8 +93,50 @@
       password: { required },
     },
     methods: {
-      submit() {
-        this.$refs.observer.validate()
+      authorization() {
+        const validPromise = this.$refs.observer.validate()
+        validPromise.then((valid) => {
+          this.fetchTokenAndUser()
+        })
+      },
+      fetchTokenAndUser() {
+        this.$auth
+          .loginWith('local', {
+            data: {
+              login: this.login,
+              password: this.password,
+            },
+          })
+          .then((data) => {
+            const user = data.data.data.user
+            const token = data.data.data.token
+            this.$auth.setToken('local', `Bearer ${token}`)
+            if (!this.rememberMe) {
+              localStorage.setItem('auth._token.local', '')
+            }
+            this.$auth.setUser(user)
+          })
+          .catch((response) => {
+            if (
+              response &&
+              response.message === 'Request failed with status code 401'
+            ) {
+              this.$toast.error('Введен неверный логин или пароль', {
+                position: 'top-right',
+                timeout: 5000,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: false,
+                hideProgressBar: false,
+                closeButton: 'button',
+                icon: true,
+                rtl: false,
+              })
+            }
+          })
       },
     },
   }

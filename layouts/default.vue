@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app light>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -8,37 +8,68 @@
       app
     >
       <v-list>
-        <v-list-item
+        <v-tooltip right :disabled="!miniVariant">
+          <template v-slot:activator="{ on }">
+            <v-list-item v-on="on" @click.stop="miniVariant = !miniVariant">
+              <v-list-item-action class="icon-menu-item">
+                <v-icon>
+                  mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}
+                </v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title v-text="'Свернуть меню'" />
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <span>Развернуть меню</span>
+        </v-tooltip>
+        <v-tooltip
           v-for="(item, i) in items"
           :key="i"
-          :to="item.to"
-          router
-          exact
+          right
+          :disabled="!miniVariant"
         >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
+          <template v-slot:activator="{ on }">
+            <v-list-item :to="item.to" router exact v-on="on">
+              <v-list-item-action class="icon-menu-item">
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title" />
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <span>{{ item.title }}</span>
+        </v-tooltip>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
+      <!--      <v-btn icon @click.stop="clipped = !clipped">-->
+      <!--        <v-icon>mdi-application</v-icon>-->
+      <!--      </v-btn>-->
+      <!--      <v-btn icon @click.stop="fixed = !fixed">-->
+      <!--        <v-icon>mdi-minus</v-icon>-->
+      <!--      </v-btn>-->
+      <div>
+        <v-select
+          v-if="roles.length > 1"
+          v-model="role"
+          :items="roles"
+          item-text="label"
+          item-value="value"
+          hide-details
+        >
+        </v-select>
+        <v-toolbar-title v-else v-text="roles[0].label" />
+      </div>
       <v-spacer />
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>mdi-menu</v-icon>
+      <!--      <v-btn icon @click.stop="rightDrawer = !rightDrawer">-->
+      <!--        <v-icon>mdi-menu</v-icon>-->
+      <!--      </v-btn>-->
+      <v-btn text @click="logout">
+        <v-icon>mdi-exit-to-app</v-icon>
+        Выход
       </v-btn>
     </v-app-bar>
     <v-main>
@@ -66,26 +97,47 @@
   export default {
     data() {
       return {
+        role: {
+          label: 'Панель заказчика',
+          value: 'customer',
+        },
+        roles: [
+          {
+            label: 'Панель оператора',
+            value: 'operator',
+          },
+        ],
         clipped: false,
-        drawer: false,
+        drawer: true,
         fixed: false,
         items: [
           {
-            icon: 'mdi-apps',
-            title: 'Welcome',
+            icon: 'mdi-home',
+            title: 'Главная',
             to: '/',
           },
           {
-            icon: 'mdi-chart-bubble',
-            title: 'Inspire',
+            icon: 'mdi-account-multiple-check',
+            title: 'Еще одна страница',
             to: '/inspire',
           },
         ],
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: 'Vuetify.js',
+        title: 'Панель заказчика',
       }
+    },
+    methods: {
+      logout() {
+        this.$auth.logout()
+      },
     },
   }
 </script>
+
+<style lang="scss" scoped>
+  .icon-menu-item {
+    margin-right: 13px;
+  }
+</style>
