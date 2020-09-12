@@ -12,10 +12,6 @@
         <v-card-text>
           <p>Личный кабинет для оператора площадки.</p>
         </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/login"> Форма авторизации </v-btn>
-        </v-card-actions>
       </v-card>
     </v-flex>
   </v-layout>

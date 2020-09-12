@@ -8,6 +8,14 @@ export default {
    ** See https://nuxtjs.org/api/configuration-mode
    */
   mode: 'spa',
+  layoutTransition: {
+    name: 'layout',
+    mode: '',
+  },
+  loading: {
+    color: '#00b8d4',
+    height: '3px',
+  },
   /*
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
@@ -34,12 +42,12 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['assets/animation.scss', 'assets/toastification.scss'],
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [],
+  plugins: ['~/plugins/vue-toastification'],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -60,12 +68,47 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
     ['@mole-inc/nuxt-validate',
       {
         lang: 'ru',
       }
     ]
   ],
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: `${process.env.API_URL_AUTH_SERVICE}/auth/signin`,
+            method: 'post',
+            propertyName: 'data.token',
+          },
+          // logout: { url: '/api/auth/logout', method: 'post' },
+          user: {
+            url: `${process.env.API_URL_AUTH_SERVICE}/auth/me`,
+            method: 'get',
+            propertyName: 'data',
+          },
+          logout: false,
+          // user: false,
+        },
+        // tokenType: 'bearer',
+        // globalToken: true,
+        tokenRequired: false,
+        autoFetchUser: false,
+      },
+    },
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: '/login',
+      home: '/',
+    },
+  },
+  router: {
+    middleware: ['auth'],
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options

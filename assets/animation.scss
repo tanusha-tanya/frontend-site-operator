@@ -1,0 +1,40 @@
+.layout-enter-active,
+.layout-leave-active {
+
+}
+.layout-enter-to {
+  animation: slide-in-fwd-center 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.layout-leave-to {
+  animation: slide-in-fwd-center-leave 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  position: relative;
+  z-index: 0;
+}
+
+@keyframes slide-in-fwd-center {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-fwd-center-leave {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
