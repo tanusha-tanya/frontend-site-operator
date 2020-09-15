@@ -117,9 +117,9 @@
             to: '/',
           },
           {
-            icon: 'mdi-account-multiple-check',
-            title: 'Еще одна страница',
-            to: '/inspire',
+            icon: 'mdi-speaker_notes',
+            title: 'Заявки на аккредитацию',
+            to: '/accreditations',
           },
         ],
         miniVariant: false,
