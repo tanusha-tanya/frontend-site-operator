@@ -1,11 +1,11 @@
 export default {
   methods: {
-    getAccreditationList($page = undefined) {
+    getAccreditationList(page = undefined) {
       return this.$axios.$get(
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation`,
         {
           params: {
-            page: $page === undefined ? 1 : $page,
+            page: page === undefined ? 1 : page,
           },
         },
       )
@@ -15,9 +15,9 @@ export default {
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/total/`,
       )
     },
-    getAccreditation($id) {
+    getAccreditationItem(id) {
       return this.$axios.$get(
-        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/items/{$id}`,
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/`,
       )
     },
   },

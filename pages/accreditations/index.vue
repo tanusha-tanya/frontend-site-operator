@@ -4,8 +4,8 @@
       v-for="item of items"
       :key="item.id"
       :disabled="item.status.id === 'c'"
-      :class="['status-' + item.status.id, 'mb-3']"
-      :href="'/accreditation/items/' + item.id"
+      class="mb-3"
+      :href="'/accreditations/' + item.id"
       outlined
     >
       <v-list-item>
@@ -14,11 +14,10 @@
             Заявка на аккредитацию
           </v-list-item-title>
           <v-list-item-subtitle>
-            от {{ item.created_at_formatted }}
-            {{ item.created_at }}
+            от {{ item.created_at }}
           </v-list-item-subtitle>
         </v-list-item-content>
-        <div class="v-card-status">
+        <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
           {{ item.status.name }}
         </div>
       </v-list-item>
@@ -32,7 +31,7 @@
 </template>
 
 <script>
-  import api from '../plugins/mixins/api'
+  import api from '../../plugins/mixins/api'
 
   export default {
     name: 'Accreditation',
@@ -45,7 +44,7 @@
         items: null,
       }
     },
-    mounted() {
+    created() {
       this.getAccreditationList(this.currentPage)
         .then((response) => {
           console.log(response.data)
@@ -85,7 +84,7 @@
   .v-card-status {
     flex-shrink: 0;
     padding-left: 12px;
-    .v-card.status-e & {
+    &--e {
       color: var(--v-error-base);
     }
   }
