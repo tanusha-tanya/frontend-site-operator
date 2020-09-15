@@ -20,5 +20,13 @@ export default {
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/`,
       )
     },
+    setAccreditationStatus(id, status = 'uc') {
+      return this.$axios.$patch(
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/`,
+        {
+          status,
+        },
+      )
+    },
   },
 }

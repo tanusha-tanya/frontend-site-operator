@@ -1,6 +1,16 @@
 <template>
   <div>
-    <v-card outlined>
+    <v-alert
+      :value="alertSuccess"
+      type="success"
+      transition="scroll-y-transition"
+    >
+      Новый статус сохранён
+    </v-alert>
+    <v-alert :value="alertError" type="error" transition="scroll-y-transition">
+      Ошибка: новый статус не сохранён
+    </v-alert>
+    <v-card v-if="!!item" outlined>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
@@ -15,32 +25,47 @@
         </div>
       </v-list-item>
       <v-list-item>
-        <v-btn :href="item.charter.url" text>{{ item.charter.name }}</v-btn>
+        <v-list-item-content>
+          <v-list-item-subtitle>
+            <ul>
+              <li>
+                <a :href="item.charter.url">{{ item.charter.name }}</a>
+              </li>
+              <li>
+                <a :href="item.decision.url">{{ item.decision.name }}</a>
+              </li>
+              <li>
+                <a :href="item.order.url">{{ item.order.name }}</a>
+              </li>
+              <li>
+                <a :href="item.reg_cert.url">{{ item.reg_cert.name }}</a>
+              </li>
+              <li>
+                <a :href="item.accounting_cert.url">
+                  {{ item.accounting_cert.name }}
+                </a>
+              </li>
+              <li>
+                <a :href="item.egru.url">{{ item.egru.name }}</a>
+              </li>
+              <li>
+                <a :href="item.smp.url">{{ item.smp.name }}</a>
+              </li>
+            </ul>
+          </v-list-item-subtitle>
+        </v-list-item-content>
       </v-list-item>
-      <v-list-item>
-        <v-btn :href="item.decision.url" text>{{ item.decision.name }}</v-btn>
-      </v-list-item>
-      <v-list-item>
-        <v-btn :href="item.order.url" text>{{ item.order.name }}</v-btn>
-      </v-list-item>
-      <v-list-item>
-        <v-btn :href="item.reg_cert.url" text>{{ item.reg_cert.name }}</v-btn>
-      </v-list-item>
-      <v-list-item>
-        <v-btn :href="item.accounting_cert.url" text>
-          {{ item.accounting_cert.name }}
-        </v-btn>
-      </v-list-item>
-      <v-list-item>
-        <v-btn :href="item.egru.url" text>{{ item.egru.name }}</v-btn>
-      </v-list-item>
-      <v-list-item>
-        <v-btn :href="item.smp.url" text>{{ item.smp.name }}</v-btn>
-      </v-list-item>
-      <v-card-actions>
-        <v-btn text>Button</v-btn>
-        <v-btn text>Button</v-btn>
-      </v-card-actions>
+      <template v-if="item.status.id === 'uc'">
+        <v-divider></v-divider>
+        <v-list-item>
+          <v-list-item-content>
+            <v-card-actions>
+              <v-btn color="primary" @click="setApprove">Подтвердить</v-btn>
+              <v-btn color="error" @click="setError">Отклонить</v-btn>
+            </v-card-actions>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
     </v-card>
   </div>
 </template>
@@ -53,7 +78,9 @@
     mixins: [api],
     data() {
       return {
-        item: [],
+        item: null,
+        alertSuccess: false,
+        alertError: false,
       }
     },
     validate({ params }) {
@@ -63,12 +90,49 @@
       this.getAccreditationItem(this.$route.params.id)
         .then((response) => {
           this.item = response.data
-          console.log(this.item)
         })
         .catch((error) => {
-          this.item = []
-          console.log(error)
+          this.item = null
+          console.log(error.response.data)
         })
+    },
+    methods: {
+      setApprove() {
+        this.setAccreditationStatus(this.$route.params.id, 'c')
+          .then((response) => {
+            if (response.success === true) {
+              this.item = response.data
+              this.alertSuccess = true
+              this.alertError = false
+            } else {
+              this.alertSuccess = false
+              this.alertError = true
+            }
+          })
+          .catch((error) => {
+            console.log(error.response.data)
+            this.alertSuccess = false
+            this.alertError = true
+          })
+      },
+      setError() {
+        this.setAccreditationStatus(this.$route.params.id, 'e')
+          .then((response) => {
+            if (response.success === true) {
+              this.item = response.data
+              this.alertSuccess = true
+              this.alertError = false
+            } else {
+              this.alertSuccess = false
+              this.alertError = true
+            }
+          })
+          .catch((error) => {
+            console.log(error.response.data)
+            this.alertSuccess = false
+            this.alertError = true
+          })
+      },
     },
   }
 </script>

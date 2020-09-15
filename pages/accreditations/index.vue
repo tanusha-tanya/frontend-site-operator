@@ -3,7 +3,7 @@
     <v-card
       v-for="item of items"
       :key="item.id"
-      :disabled="item.status.id === 'c'"
+      :disabled="item.status.id !== 'uc'"
       class="mb-3"
       :href="'/accreditations/' + item.id"
       outlined
@@ -23,6 +23,7 @@
       </v-list-item>
     </v-card>
     <v-pagination
+      v-if="totalPages"
       v-model="currentPage"
       :length="totalPages"
       @input="update"
