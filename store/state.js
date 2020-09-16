@@ -1,6 +1,6 @@
 const state = () => ({
   env: {
-    API_URL: process.env.API_URL,
+    API_URL_OPERATOR_SERVICE: process.env.API_URL_OPERATOR_SERVICE,
   },
 })
 
