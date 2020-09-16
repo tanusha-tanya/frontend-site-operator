@@ -86,7 +86,7 @@
     flex-shrink: 0;
     padding-left: 12px;
     &--e {
-      color: var(--v-error-base);
+      color: #d50000;
     }
   }
 </style>
