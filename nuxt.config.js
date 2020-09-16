@@ -69,11 +69,12 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/auth',
-    ['@mole-inc/nuxt-validate',
+    [
+      '@mole-inc/nuxt-validate',
       {
         lang: 'ru',
-      }
-    ]
+      },
+    ],
   ],
   auth: {
     strategies: {
@@ -95,7 +96,7 @@ export default {
         },
         // tokenType: 'bearer',
         // globalToken: true,
-        tokenRequired: false,
+        tokenRequired: true,
         autoFetchUser: false,
       },
     },
