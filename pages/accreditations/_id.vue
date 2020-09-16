@@ -26,6 +26,7 @@
       </v-list-item>
       <v-list-item>
         <v-list-item-content>
+          <div>Документы</div>
           <v-list-item-subtitle>
             <ul>
               <li>
