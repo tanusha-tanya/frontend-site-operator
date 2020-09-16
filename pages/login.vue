@@ -62,6 +62,8 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
   import {
     setInteractionMode,
     ValidationObserver,
@@ -93,6 +95,7 @@
       password: { required },
     },
     methods: {
+      ...mapActions(['startGlobalPreloader', 'stopGlobalPreloader']),
       authorization() {
         const validPromise = this.$refs.observer.validate()
         validPromise.then((valid) => {
@@ -100,6 +103,7 @@
         })
       },
       fetchTokenAndUser() {
+        this.startGlobalPreloader()
         this.$auth
           .loginWith('local', {
             data: {
@@ -108,6 +112,7 @@
             },
           })
           .then((data) => {
+            this.stopGlobalPreloader()
             const user = data.data.data.user
             const token = data.data.data.token
             this.$auth.setToken('local', `Bearer ${token}`)
@@ -117,6 +122,7 @@
             this.$auth.setUser(user)
           })
           .catch((response) => {
+            this.stopGlobalPreloader()
             if (
               response &&
               response.message === 'Request failed with status code 401'

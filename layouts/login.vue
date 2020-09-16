@@ -10,12 +10,18 @@
         </v-container>
       </v-scroll-y-transition>
     </v-main>
+    <preloader />
   </v-app>
 </template>
 
 <script>
   import particles from '../plugins/mixins/particles'
+  import preloader from '../components/preloader/preloader'
   export default {
+    name: 'LayoutsLogin',
+    components: {
+      preloader,
+    },
     mixins: [particles],
     data() {
       return {
