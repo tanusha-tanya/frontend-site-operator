@@ -86,8 +86,8 @@
     data() {
       return {
         rememberMe: false,
-        login: 'dummy',
-        password: '123456',
+        login: 'test@test.ru',
+        password: '1234567',
       }
     },
     validations: {

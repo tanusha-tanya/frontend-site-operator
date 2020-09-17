@@ -72,6 +72,8 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
   import api from '../../plugins/mixins/api'
 
   export default {
@@ -88,16 +90,26 @@
       return /^\d+$/.test(params.id)
     },
     created() {
+      this.startGlobalPreloader()
       this.getAccreditationItem(this.$route.params.id)
         .then((response) => {
           this.item = response.data
+          this.stopGlobalPreloader()
         })
         .catch((error) => {
           this.item = null
-          console.log(error.response.data)
+          this.stopGlobalPreloader()
+          if (error.response.status === 404 || error.response.status === 400) {
+            return this.$nuxt.error({
+              statusCode: 404,
+            })
+          } else {
+            console.log(error.response.status)
+          }
         })
     },
     methods: {
+      ...mapActions(['startGlobalPreloader', 'stopGlobalPreloader']),
       setApprove() {
         this.setAccreditationStatus(this.$route.params.id, 'c')
           .then((response) => {

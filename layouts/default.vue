@@ -90,11 +90,18 @@
     <v-footer :absolute="!fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
+    <preloader />
   </v-app>
 </template>
 
 <script>
+  import preloader from '../components/preloader/preloader'
+
   export default {
+    name: 'LayoutsDefault',
+    components: {
+      preloader,
+    },
     data() {
       return {
         role: {
