@@ -1,21 +1,32 @@
 <template>
   <div>
+    <v-row>
+      <v-col>
+        <span class="text-h4">Список заявок</span>
+      </v-col>
+    </v-row>
     <v-card
       v-for="item of items"
       :key="item.id"
       :disabled="item.status.id !== 'uc'"
       class="mb-3"
-      nuxt
-      :to="'/accreditations/' + item.id"
       outlined
     >
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
-            Заявка на аккредитацию
+            <nuxt-link class="card-link" :to="'/accreditations/' + item.id">
+              Заявка на аккредитацию № {{ item.id }}
+            </nuxt-link>
           </v-list-item-title>
           <v-list-item-subtitle>
             от {{ formatDate(item.created_at) }}
+          </v-list-item-subtitle>
+          <v-list-item-subtitle class="mt-3">
+            <v-icon>mdi-paperclip</v-icon>o соглашение с оператором торгов
+          </v-list-item-subtitle>
+          <v-list-item-subtitle class="mt-1">
+            <v-icon>mdi-paperclip</v-icon>o подтверждение отсутствия в РНП
           </v-list-item-subtitle>
         </v-list-item-content>
         <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
@@ -89,6 +100,13 @@
     padding-left: 12px;
     &--e {
       color: #d50000;
+    }
+  }
+  .card-link {
+    color: #000;
+    text-decoration: none;
+    &:hover {
+      color: #0097a7;
     }
   }
 </style>
