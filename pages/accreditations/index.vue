@@ -40,15 +40,20 @@
       :length="totalPages"
       @input="update"
     ></v-pagination>
+    <wereProblems />
   </div>
 </template>
 
 <script>
   import api from '../../plugins/mixins/api'
   import formatDate from '../../plugins/mixins/formatDate'
+  import wereProblems from '~/components/staticBlocks/wereProblems'
 
   export default {
     name: 'Accreditation',
+    components: {
+      wereProblems,
+    },
     mixins: [api, formatDate],
     data() {
       return {
