@@ -23,10 +23,10 @@
             от {{ formatDate(item.created_at) }}
           </v-list-item-subtitle>
           <v-list-item-subtitle class="mt-3">
-            <v-icon>mdi-paperclip</v-icon>o соглашение с оператором торгов
+            <v-icon>mdi-paperclip</v-icon>Соглашение с оператором торгов
           </v-list-item-subtitle>
           <v-list-item-subtitle class="mt-1">
-            <v-icon>mdi-paperclip</v-icon>o подтверждение отсутствия в РНП
+            <v-icon>mdi-paperclip</v-icon>Подтверждение отсутствия в РНП
           </v-list-item-subtitle>
         </v-list-item-content>
         <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
