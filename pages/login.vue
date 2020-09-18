@@ -13,7 +13,7 @@
               v-model="login"
               :error-messages="errors"
               type="text"
-              label="Логин"
+              label="E-mail"
               required
               readonly
               @focus="
