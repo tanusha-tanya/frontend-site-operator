@@ -57,6 +57,7 @@
           </v-row>
         </form>
       </ValidationObserver>
+      <wereProblems authorization />
     </div>
   </v-row>
 </template>
@@ -71,6 +72,7 @@
     extend,
   } from 'vee-validate'
   import { required, email } from 'vee-validate/dist/rules'
+  import wereProblems from '~/components/staticBlocks/wereProblems'
 
   setInteractionMode('eager')
 
@@ -81,6 +83,7 @@
     components: {
       ValidationObserver,
       ValidationProvider,
+      wereProblems,
     },
     layout: 'login',
     data() {
