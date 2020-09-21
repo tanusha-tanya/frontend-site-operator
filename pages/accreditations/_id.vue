@@ -17,7 +17,7 @@
             Заявка на аккредитацию
           </v-list-item-title>
           <v-list-item-subtitle>
-            от {{ item.created_at }}
+            от {{ formatDate(item.created_at) }}
           </v-list-item-subtitle>
         </v-list-item-content>
         <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
@@ -74,11 +74,13 @@
 <script>
   import { mapActions } from 'vuex'
 
+  import formatDate from '../../plugins/mixins/formatDate'
+
   import api from '../../plugins/mixins/api'
 
   export default {
     name: 'AccreditationItem',
-    mixins: [api],
+    mixins: [api, formatDate],
     data() {
       return {
         item: null,
