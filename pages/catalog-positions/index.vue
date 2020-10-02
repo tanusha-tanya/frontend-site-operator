@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col>
-        <span class="text-h4">Список заявок на аккредитацию</span>
+        <span class="text-h4">Список заявок на пополнение каталога</span>
       </v-col>
     </v-row>
     <v-card
@@ -15,18 +15,25 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
-            <nuxt-link class="card-link" :to="'/accreditations/' + item.id">
-              Заявка на аккредитацию №{{ item.id }}
+            <nuxt-link class="card-link" :to="'/catalog-positions/' + item.id">
+              Заявка №{{ item.id }}
             </nuxt-link>
           </v-list-item-title>
-          <v-list-item-subtitle>
+          <v-list-item-title>
             от {{ formatDate(item.created_at) }}
-          </v-list-item-subtitle>
+          </v-list-item-title>
           <v-list-item-subtitle class="mt-3">
-            <v-icon>mdi-paperclip</v-icon>Соглашение с оператором торгов
+            {{ item.title }}
           </v-list-item-subtitle>
-          <v-list-item-subtitle class="mt-1">
-            <v-icon>mdi-paperclip</v-icon>Подтверждение отсутствия в РНП
+          <v-list-item-subtitle class="mt-3 mb-3">
+            {{ item.text_preview }}
+          </v-list-item-subtitle>
+          <v-list-item-subtitle
+            v-for="feature of item.features"
+            :key="feature.name"
+            class="mt-1"
+          >
+            <b>{{ feature.name }}:</b> {{ feature.value }}
           </v-list-item-subtitle>
         </v-list-item-content>
         <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
@@ -52,7 +59,7 @@
   import wereProblems from '~/components/staticBlocks/wereProblems'
 
   export default {
-    name: 'Accreditation',
+    name: 'CatalogPositions',
     components: {
       wereProblems,
     },
@@ -67,23 +74,16 @@
     },
     created() {
       this.startGlobalPreloader()
-      this.getAccreditationList(this.currentPage)
+      this.getCatalogPositionList(this.currentPage)
         .then((response) => {
           this.items = response.data
           this.stopGlobalPreloader()
         })
         .catch((error) => {
           this.items = []
-          this.stopGlobalPreloader()
-          if (error.response.status === 404 || error.response.status === 400) {
-            return this.$nuxt.error({
-              statusCode: 404,
-            })
-          } else {
-            console.log(error.response.status)
-          }
+          console.log(error)
         })
-      this.getAccreditationTotal()
+      this.getCatalogPositionTotal()
         .then((response) => {
           this.totalPages = Math.ceil(response.data.total / this.perPage)
         })
@@ -97,24 +97,14 @@
       update(pagination) {
         this.startGlobalPreloader()
         this.currentPage = pagination
-        this.getAccreditationList(this.currentPage)
+        this.getCatalogPositionList(this.currentPage)
           .then((response) => {
             this.items = response.data
             this.stopGlobalPreloader()
           })
           .catch((error) => {
             this.items = []
-            this.stopGlobalPreloader()
-            if (
-              error.response.status === 404 ||
-              error.response.status === 400
-            ) {
-              return this.$nuxt.error({
-                statusCode: 404,
-              })
-            } else {
-              console.log(error.response.status)
-            }
+            console.log(error)
           })
       },
     },

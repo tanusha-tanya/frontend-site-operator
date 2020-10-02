@@ -30,7 +30,15 @@
           :disabled="!miniVariant"
         >
           <template v-slot:activator="{ on }">
-            <v-list-item :to="item.to" router exact v-on="on">
+            <v-list-item
+              :to="item.to"
+              router
+              exact
+              :class="
+                isRouteActive(item.to) ? 'highlighted v-list-item--active' : ''
+              "
+              v-on="on"
+            >
               <v-list-item-action class="icon-menu-item">
                 <v-icon>{{ item.icon }}</v-icon>
               </v-list-item-action>
@@ -128,6 +136,11 @@
             title: 'Заявки на аккредитацию',
             to: '/accreditations',
           },
+          {
+            icon: 'mdi-table-large-plus ',
+            title: 'Заявки на пополнение каталога',
+            to: '/catalog-positions',
+          },
         ],
         miniVariant: false,
         right: true,
@@ -138,6 +151,12 @@
     methods: {
       logout() {
         this.$auth.logout()
+      },
+      isRouteActive(path) {
+        return (
+          (path === '/' && path === this.$route.path) ||
+          (path !== '/' && this.$route.path.includes(path))
+        )
       },
     },
   }
