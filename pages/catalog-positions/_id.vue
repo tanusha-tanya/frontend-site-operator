@@ -10,11 +10,11 @@
     <v-alert :value="alertError" type="error" transition="scroll-y-transition">
       Ошибка: новый статус не сохранён
     </v-alert>
-    <v-card v-if="!!item" outlined>
+    <v-card v-if="!!item && !!company" outlined>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
-            Заявка на аккредитацию №{{ item.id }}
+            Заявка на пополнение каталога №{{ item.id }}
           </v-list-item-title>
           <v-list-item-subtitle>
             от {{ formatDate(item.created_at) }}
@@ -26,34 +26,57 @@
       </v-list-item>
       <v-list-item>
         <v-list-item-content>
-          <div>Документы</div>
-          <v-list-item-subtitle>
-            <ul>
-              <li>
-                <a :href="item.charter.url">{{ item.charter.name }}</a>
-              </li>
-              <li>
-                <a :href="item.decision.url">{{ item.decision.name }}</a>
-              </li>
-              <li>
-                <a :href="item.order.url">{{ item.order.name }}</a>
-              </li>
-              <li>
-                <a :href="item.reg_cert.url">{{ item.reg_cert.name }}</a>
-              </li>
-              <li>
-                <a :href="item.accounting_cert.url">
-                  {{ item.accounting_cert.name }}
-                </a>
-              </li>
-              <li>
-                <a :href="item.egru.url">{{ item.egru.name }}</a>
-              </li>
-              <li>
-                <a :href="item.smp.url">{{ item.smp.name }}</a>
-              </li>
-            </ul>
+          <v-list-item-title class="mt-3">
+            {{ item.title }}
+          </v-list-item-title>
+          <v-list-item-subtitle class="mt-3 mb-3">
+            {{ item.text_preview }}
           </v-list-item-subtitle>
+          <div v-for="(feature, index) of item.features" :key="feature.name">
+            <v-divider v-if="index"></v-divider>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title v-html="feature.name"></v-list-item-title>
+                <v-list-item-subtitle
+                  v-html="feature.value"
+                ></v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+      <v-list-item>
+        <v-list-item-content>
+          <div>Юридическое лицо</div>
+          <v-list-item-subtitle
+            v-if="!!company"
+            v-html="company.name"
+          ></v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+      <v-list-item>
+        <v-list-item-content>
+          <div>Документы</div>
+          <div
+            v-for="file of item.images"
+            :key="file.url"
+            class="file-container"
+          >
+            <v-icon>mdi-file</v-icon>
+            <a :href="file.url" v-html="file.name"></a>
+            <v-tooltip right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="primary" icon v-bind="attrs" v-on="on">
+                  <v-icon color="grey lighten-1">
+                    mdi-information-outline
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span>Всплывающая подсказка</span>
+            </v-tooltip>
+          </div>
         </v-list-item-content>
       </v-list-item>
       <template v-if="item.status.id === 'uc'">
@@ -79,11 +102,12 @@
   import api from '../../plugins/mixins/api'
 
   export default {
-    name: 'AccreditationItem',
+    name: 'CatalogPositionItem',
     mixins: [api, formatDate],
     data() {
       return {
         item: null,
+        company: null,
         alertSuccess: false,
         alertError: false,
       }
@@ -93,10 +117,19 @@
     },
     created() {
       this.startGlobalPreloader()
-      this.getAccreditationItem(this.$route.params.id)
+      this.getCatalogPositionItem(this.$route.params.id)
         .then((response) => {
           this.item = response.data
-          this.stopGlobalPreloader()
+          this.getRegisteredCompany(this.item.company_id)
+            .then((response) => {
+              this.company = response.data
+              this.stopGlobalPreloader()
+            })
+            .catch((error) => {
+              this.company = null
+              console.log(error.response.status)
+              this.stopGlobalPreloader()
+            })
         })
         .catch((error) => {
           this.item = null
@@ -114,7 +147,7 @@
       ...mapActions(['startGlobalPreloader', 'stopGlobalPreloader']),
       setApprove() {
         this.startGlobalPreloader()
-        this.setAccreditationStatus(this.$route.params.id, 'c')
+        this.setCatalogPositionStatus(this.$route.params.id, 'c')
           .then((response) => {
             if (response.success === true) {
               this.item = response.data
@@ -144,7 +177,7 @@
       },
       setError() {
         this.startGlobalPreloader()
-        this.setAccreditationStatus(this.$route.params.id, 'e')
+        this.setCatalogPositionStatus(this.$route.params.id, 'e')
           .then((response) => {
             if (response.success === true) {
               this.item = response.data
@@ -178,13 +211,46 @@
 
 <style lang="scss" scoped>
   .v-card-status {
+    align-self: flex-start;
     flex-shrink: 0;
-    padding-left: 12px;
+    padding: 12px 0 0 12px;
     font-weight: bold;
     &--uc {
       color: #0097a7;
     }
     &--e {
+      color: #d50000;
+    }
+  }
+  .file-container {
+    display: flex;
+    margin: 15px 0;
+    + .file-container {
+      margin-top: 0;
+    }
+    .v-icon.mdi-file {
+      margin: 4px 9px 4px 0;
+    }
+    a {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    &__file-min {
+      flex: none;
+    }
+    &__name {
+      display: flex;
+      align-items: center;
+      margin-left: 15px;
+    }
+    &__label {
+      color: #a7a7a7;
+      &--active {
+        color: #000;
+      }
+    }
+    .error--text ~ .file-container__label {
       color: #d50000;
     }
   }

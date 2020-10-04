@@ -33,8 +33,7 @@
 <style lang="scss" scoped>
   .wereProblems {
     background-color: #f5f5f5;
-    margin: 10px -12px;
-    margin-bottom: -5px;
+    margin: auto -12px -12px;
     padding: 0 12px;
     &--authorization {
       color: #fff;
