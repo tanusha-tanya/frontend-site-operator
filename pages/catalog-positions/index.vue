@@ -16,7 +16,7 @@
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
             <nuxt-link class="card-link" :to="'/catalog-positions/' + item.id">
-              Заявка №{{ item.id }}
+              Заявка на пополнение каталога №{{ item.id }}
             </nuxt-link>
           </v-list-item-title>
           <v-list-item-title>

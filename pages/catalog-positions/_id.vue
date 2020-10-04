@@ -14,7 +14,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
-            Заявка №{{ item.id }}
+            Заявка на пополнение каталога №{{ item.id }}
           </v-list-item-title>
           <v-list-item-subtitle>
             от {{ formatDate(item.created_at) }}
