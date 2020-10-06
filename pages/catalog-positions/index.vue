@@ -8,7 +8,7 @@
     <v-card
       v-for="item of items"
       :key="item.id"
-      :disabled="item.status.id !== 'uc'"
+      :disabled="item.status.id !== 'new'"
       class="mb-3"
       outlined
     >
@@ -37,7 +37,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
         <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
-          {{ item.status.name }}
+          {{ item.status.value }}
         </div>
       </v-list-item>
     </v-card>
