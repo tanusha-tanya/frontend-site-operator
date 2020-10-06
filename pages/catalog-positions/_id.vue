@@ -21,7 +21,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
         <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
-          {{ item.status.name }}
+          {{ item.status.value }}
         </div>
       </v-list-item>
       <v-list-item>
@@ -32,14 +32,23 @@
           <v-list-item-subtitle class="mt-3 mb-3">
             {{ item.text_preview }}
           </v-list-item-subtitle>
-          <div v-for="(feature, index) of item.features" :key="feature.name">
-            <v-divider v-if="index"></v-divider>
+          <div>
+            <v-divider></v-divider>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title v-html="feature.name"></v-list-item-title>
-                <v-list-item-subtitle
-                  v-html="feature.value"
-                ></v-list-item-subtitle>
+                <v-list-item-title v-html="item.mark"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title v-html="item.mark_size"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title
+                  v-html="item.mark_size_voltage"
+                ></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </div>
@@ -60,7 +69,7 @@
         <v-list-item-content>
           <div>Документы</div>
           <div
-            v-for="file of item.images"
+            v-for="file of item.documents.certificate"
             :key="file.url"
             class="file-container"
           >
@@ -79,7 +88,7 @@
           </div>
         </v-list-item-content>
       </v-list-item>
-      <template v-if="item.status.id === 'uc'">
+      <template v-if="item.status.id === 'new'">
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
@@ -147,7 +156,7 @@
       ...mapActions(['startGlobalPreloader', 'stopGlobalPreloader']),
       setApprove() {
         this.startGlobalPreloader()
-        this.setCatalogPositionStatus(this.$route.params.id, 'c')
+        this.setCatalogPositionStatus(this.$route.params.id, 'approved')
           .then((response) => {
             if (response.success === true) {
               this.item = response.data
@@ -177,7 +186,7 @@
       },
       setError() {
         this.startGlobalPreloader()
-        this.setCatalogPositionStatus(this.$route.params.id, 'e')
+        this.setCatalogPositionStatus(this.$route.params.id, 'rejected')
           .then((response) => {
             if (response.success === true) {
               this.item = response.data

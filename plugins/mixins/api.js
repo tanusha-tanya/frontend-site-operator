@@ -30,7 +30,7 @@ export default {
     },
     getCatalogPositionList(page = undefined) {
       return this.$axios.$get(
-        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/catalog_position`,
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/products`,
         {
           params: {
             page: page === undefined ? 1 : page,
@@ -40,17 +40,17 @@ export default {
     },
     getCatalogPositionTotal() {
       return this.$axios.$get(
-        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/catalog_position/total/`,
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/products/total/`,
       )
     },
     getCatalogPositionItem(id) {
       return this.$axios.$get(
-        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/catalog_position/${id}/`,
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/products/${id}/`,
       )
     },
     setCatalogPositionStatus(id, status = 'uc') {
-      return this.$axios.$patch(
-        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/catalog_position/${id}/`,
+      return this.$axios.$post(
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/products/${id}/`,
         {
           status,
         },
