@@ -13,6 +13,19 @@
     <v-card v-if="!!item && !!company" outlined>
       <v-list-item>
         <v-list-item-content>
+          <v-row>
+            <v-col>
+              <v-btn
+                color="success"
+                text
+                class="mr-4"
+                nuxt
+                to="/catalog-positions"
+              >
+                <v-icon left>mdi-arrow-left</v-icon>Вернуться к заявкам
+              </v-btn>
+            </v-col>
+          </v-row>
           <v-list-item-title class="headline mb-1">
             Заявка на пополнение каталога №{{ item.id }}
           </v-list-item-title>
@@ -34,23 +47,22 @@
           </v-list-item-subtitle>
           <div>
             <v-divider></v-divider>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title v-html="item.mark"></v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title v-html="item.mark_size"></v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title
-                  v-html="item.mark_size_voltage"
-                ></v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
+            <v-list-item-content>
+              <v-list-item-subtitle>Марка</v-list-item-subtitle>
+              <v-list-item-title v-html="item.mark"></v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-content>
+              <v-list-item-subtitle>Маркоразмер</v-list-item-subtitle>
+              <v-list-item-title v-html="item.mark_size"></v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-content>
+              <v-list-item-subtitle>
+                Номинальное напряжение
+              </v-list-item-subtitle>
+              <v-list-item-title
+                v-html="item.mark_size_voltage"
+              ></v-list-item-title>
+            </v-list-item-content>
           </div>
         </v-list-item-content>
       </v-list-item>
@@ -92,9 +104,30 @@
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
-            <v-card-actions>
-              <v-btn color="primary" @click="setApprove">Подтвердить</v-btn>
-              <v-btn color="error" @click="setError">Отклонить</v-btn>
+            <v-card-actions style="align-items: flex-start">
+              <v-btn
+                color="primary"
+                style="margin-right: 15px"
+                @click="setApprove"
+              >
+                Одобрить
+              </v-btn>
+              <div style="max-width: 400px; width: 100%">
+                <v-btn
+                  color="error"
+                  :disabled="!textRejection"
+                  @click="setError"
+                >
+                  Отклонить
+                </v-btn>
+                <v-textarea
+                  v-model="textRejection"
+                  class="mt-2"
+                  outlined
+                  label="Причина отклонения"
+                  required
+                ></v-textarea>
+              </div>
             </v-card-actions>
           </v-list-item-content>
         </v-list-item>
@@ -119,6 +152,7 @@
         company: null,
         alertSuccess: false,
         alertError: false,
+        textRejection: '',
       }
     },
     validate({ params }) {
@@ -186,7 +220,11 @@
       },
       setError() {
         this.startGlobalPreloader()
-        this.setCatalogPositionStatus(this.$route.params.id, 'rejected')
+        this.setCatalogPositionStatus(
+          this.$route.params.id,
+          'rejected',
+          this.textRejection,
+        )
           .then((response) => {
             if (response.success === true) {
               this.item = response.data
