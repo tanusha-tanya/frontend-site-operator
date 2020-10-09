@@ -13,6 +13,19 @@
     <v-card v-if="!!item" outlined>
       <v-list-item>
         <v-list-item-content>
+          <v-row>
+            <v-col>
+              <v-btn
+                color="success"
+                text
+                class="mr-4"
+                nuxt
+                to="/accreditations"
+              >
+                <v-icon left>mdi-arrow-left</v-icon>Вернуться к заявкам
+              </v-btn>
+            </v-col>
+          </v-row>
           <v-list-item-title class="headline mb-1">
             Заявка на аккредитацию №{{ item.id }}
           </v-list-item-title>

@@ -48,11 +48,12 @@ export default {
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/products/${id}/`,
       )
     },
-    setCatalogPositionStatus(id, status = 'uc') {
+    setCatalogPositionStatus(id, status = 'uc', text_rejection = null) {
       return this.$axios.$post(
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/products/${id}/`,
         {
           status,
+          text_rejection,
         },
       )
     },

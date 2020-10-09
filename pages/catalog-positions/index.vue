@@ -22,19 +22,22 @@
           <v-list-item-title>
             от {{ formatDate(item.created_at) }}
           </v-list-item-title>
-          <v-list-item-subtitle class="mt-3">
-            {{ item.title }}
-          </v-list-item-subtitle>
-          <v-list-item-subtitle class="mt-3 mb-3">
-            {{ item.text_preview }}
-          </v-list-item-subtitle>
-          <v-list-item-subtitle
-            v-for="feature of item.features"
-            :key="feature.name"
-            class="mt-1"
-          >
-            <b>{{ feature.name }}:</b> {{ feature.value }}
-          </v-list-item-subtitle>
+          <v-list-item-content class="mt-3">
+            <v-list-item-subtitle>Марка</v-list-item-subtitle>
+            <v-list-item-title v-html="item.mark"></v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-content>
+            <v-list-item-subtitle>Маркоразмер</v-list-item-subtitle>
+            <v-list-item-title v-html="item.mark_size"></v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-content>
+            <v-list-item-subtitle>
+              Номинальное напряжение
+            </v-list-item-subtitle>
+            <v-list-item-title
+              v-html="item.mark_size_voltage"
+            ></v-list-item-title>
+          </v-list-item-content>
         </v-list-item-content>
         <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
           {{ item.status.value }}
@@ -117,11 +120,14 @@
     flex-shrink: 0;
     padding: 12px 0 0 12px;
     font-weight: bold;
-    &--uc {
-      color: #0097a7;
+    &--new {
+      color: $colorTurquoiseHover;
     }
-    &--e {
-      color: #d50000;
+    &--rejected {
+      color: $colorRed;
+    }
+    &--approved {
+      color: $colorGreen;
     }
   }
   .card-link {

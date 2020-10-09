@@ -30,7 +30,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
         <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
-          {{ item.status.name }}
+          {{ item.status.value }}
         </div>
       </v-list-item>
     </v-card>
@@ -128,10 +128,13 @@
     padding: 12px 0 0 12px;
     font-weight: bold;
     &--uc {
-      color: #0097a7;
+      color: $colorTurquoiseHover;
     }
     &--e {
-      color: #d50000;
+      color: $colorRed;
+    }
+    &--c {
+      color: $colorGreen;
     }
   }
   .card-link {
