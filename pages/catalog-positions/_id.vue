@@ -262,11 +262,14 @@
     flex-shrink: 0;
     padding: 12px 0 0 12px;
     font-weight: bold;
-    &--uc {
-      color: #0097a7;
+    &--new {
+      color: $colorTurquoiseHover;
     }
-    &--e {
-      color: #d50000;
+    &--rejected {
+      color: $colorRed;
+    }
+    &--approved {
+      color: $colorGreen;
     }
   }
   .file-container {
