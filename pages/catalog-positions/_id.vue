@@ -27,7 +27,7 @@
             </v-col>
           </v-row>
           <v-list-item-title class="headline mb-1">
-            Заявка на пополнение каталога №{{ item.id }}
+            Заявка на добавление позиции в каталог №{{ item.id }}
           </v-list-item-title>
           <v-list-item-subtitle>
             от {{ formatDate(item.created_at) }}

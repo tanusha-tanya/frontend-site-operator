@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col>
-        <span class="text-h4">Список заявок на пополнение каталога</span>
+        <span class="text-h4">Заявки на добавление позиции в каталог</span>
       </v-col>
     </v-row>
     <v-card
@@ -16,7 +16,7 @@
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
             <nuxt-link class="card-link" :to="'/catalog-positions/' + item.id">
-              Заявка на пополнение каталога №{{ item.id }}
+              Заявка на добавление позиции в каталог №{{ item.id }}
             </nuxt-link>
           </v-list-item-title>
           <v-list-item-title>
