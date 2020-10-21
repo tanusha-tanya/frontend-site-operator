@@ -69,7 +69,8 @@
       this.startGlobalPreloader()
       this.getAccreditationList(this.currentPage)
         .then((response) => {
-          this.items = response.data
+          this.items = response.data.items
+          this.totalPages = Math.ceil(response.data.total / this.perPage)
           this.stopGlobalPreloader()
         })
         .catch((error) => {
@@ -83,14 +84,6 @@
             console.log(error.response.status)
           }
         })
-      this.getAccreditationTotal()
-        .then((response) => {
-          this.totalPages = Math.ceil(response.data.total / this.perPage)
-        })
-        .catch((error) => {
-          this.totalPages = 0
-          console.log(error)
-        })
     },
     methods: {
       ...mapActions(['startGlobalPreloader', 'stopGlobalPreloader']),
@@ -99,7 +92,8 @@
         this.currentPage = pagination
         this.getAccreditationList(this.currentPage)
           .then((response) => {
-            this.items = response.data
+            this.items = response.data.items
+            this.totalPages = Math.ceil(response.data.total / this.perPage)
             this.stopGlobalPreloader()
           })
           .catch((error) => {

@@ -1,13 +1,15 @@
 export default {
   methods: {
     getAccreditationList(page = undefined) {
-      return this.$axios.$get(
-        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation`,
-        {
-          params: {
-            page: page === undefined ? 1 : page,
-          },
-        },
+      const fData = new FormData()
+
+      fData.append('page', page)
+      fData.append('order[by]', 'id')
+      fData.append('order[direction]', 'ASC')
+
+      return this.$axios.$post(
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/list/`,
+        fData,
       )
     },
     getAccreditationTotal() {
