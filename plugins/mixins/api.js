@@ -12,9 +12,12 @@ export default {
         fData,
       )
     },
-    getAccreditationTotal() {
+    getAccreditationFilesZipArchive(id) {
       return this.$axios.$get(
-        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/total/`,
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/files/`,
+        {
+          responseType: 'blob',
+        },
       )
     },
     getAccreditationItem(id) {

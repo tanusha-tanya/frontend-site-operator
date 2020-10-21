@@ -34,7 +34,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
         <div :class="['v-card-status', 'v-card-status--' + item.status.id]">
-          {{ item.status.name }}
+          {{ item.status.value }}
         </div>
       </v-list-item>
       <v-list-item>
@@ -42,34 +42,23 @@
           <div>Документы</div>
           <v-list-item-subtitle>
             <ul>
-              <li>
-                <a :href="item.charter.url">{{ item.charter.name }}</a>
-              </li>
-              <li>
-                <a :href="item.decision.url">{{ item.decision.name }}</a>
-              </li>
-              <li>
-                <a :href="item.order.url">{{ item.order.name }}</a>
-              </li>
-              <li>
-                <a :href="item.reg_cert.url">{{ item.reg_cert.name }}</a>
-              </li>
-              <li>
-                <a :href="item.accounting_cert.url">
-                  {{ item.accounting_cert.name }}
-                </a>
-              </li>
-              <li>
-                <a :href="item.egru.url">{{ item.egru.name }}</a>
-              </li>
-              <li>
-                <a :href="item.smp.url">{{ item.smp.name }}</a>
+              <li v-for="document in item.documents" :key="document.type">
+                <a :href="document.file.url">{{ document.file.name }}</a>
               </li>
             </ul>
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <template v-if="item.status.id === 'uc'">
+      <v-list-item>
+        <a v-if="!isLoadedArchive && !loadingArchive" @click="downloadArchive">
+          Скачать документы
+        </a>
+        <a v-show="isLoadedArchive" ref="buttonLoadArchive">
+          Скачать документы
+        </a>
+        <v-progress-linear v-if="loadingArchive" value="15" />
+      </v-list-item>
+      <template v-if="item.status.id === 'accepted'">
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
@@ -99,6 +88,8 @@
         item: null,
         alertSuccess: false,
         alertError: false,
+        isLoadedArchive: false,
+        loadingArchive: false,
       }
     },
     validate({ params }) {
@@ -125,9 +116,34 @@
     },
     methods: {
       ...mapActions(['startGlobalPreloader', 'stopGlobalPreloader']),
+      downloadArchive() {
+        this.loadingArchive = true
+        this.getAccreditationFilesZipArchive(this.$route.params.id)
+          .then((response) => {
+            const objectUrl = window.URL.createObjectURL(response)
+
+            this.loadingArchive = false
+            this.isLoadedArchive = true
+
+            console.log(this.$refs.buttonLoadArchive)
+
+            this.$refs.buttonLoadArchive.setAttribute('href', objectUrl)
+            this.$refs.buttonLoadArchive.setAttribute(
+              'download',
+              `Заявка на аккредитацию №${this.$route.params.id}`,
+            )
+            this.$refs.buttonLoadArchive.click()
+
+            window.URL.revokeObjectURL(objectUrl)
+          })
+          .catch((e) => {
+            this.loadingArchive = false
+            console.log(e)
+          })
+      },
       setApprove() {
         this.startGlobalPreloader()
-        this.setAccreditationStatus(this.$route.params.id, 'c')
+        this.setAccreditationStatus(this.$route.params.id, 'closed')
           .then((response) => {
             if (response.success === true) {
               this.item = response.data
@@ -157,7 +173,7 @@
       },
       setError() {
         this.startGlobalPreloader()
-        this.setAccreditationStatus(this.$route.params.id, 'e')
+        this.setAccreditationStatus(this.$route.params.id, 'inaccurate')
           .then((response) => {
             if (response.success === true) {
               this.item = response.data
@@ -194,11 +210,14 @@
     flex-shrink: 0;
     padding-left: 12px;
     font-weight: bold;
-    &--uc {
-      color: #0097a7;
+    &--accepted {
+      color: $colorTurquoiseHover;
     }
-    &--e {
-      color: #d50000;
+    &--closed {
+      color: $colorGreen;
+    }
+    &--inaccurate {
+      color: $colorRed;
     }
   }
 </style>

@@ -8,7 +8,7 @@
     <v-card
       v-for="item of items"
       :key="item.id"
-      :disabled="item.status.id !== 'uc'"
+      :disabled="item.status.id !== 'accepted'"
       class="mb-3"
       outlined
     >
@@ -60,7 +60,7 @@
     data() {
       return {
         currentPage: 1,
-        perPage: 20,
+        perPage: 14,
         totalPages: 0,
         items: null,
       }
@@ -121,13 +121,13 @@
     flex-shrink: 0;
     padding: 12px 0 0 12px;
     font-weight: bold;
-    &--uc {
+    &--accepted {
       color: $colorTurquoiseHover;
     }
-    &--e {
+    &--inaccurate {
       color: $colorRed;
     }
-    &--c {
+    &--closed {
       color: $colorGreen;
     }
   }
