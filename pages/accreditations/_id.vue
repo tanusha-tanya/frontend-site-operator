@@ -56,7 +56,13 @@
         <a v-show="isLoadedArchive" ref="buttonLoadArchive">
           Скачать документы
         </a>
-        <v-progress-linear v-if="loadingArchive" value="15" />
+        <v-progress-circular
+          v-if="loadingArchive"
+          indeterminate
+          :size="12"
+          :width="2"
+          color="primary"
+        ></v-progress-circular>
       </v-list-item>
       <template v-if="item.status.id === 'accepted'">
         <v-divider></v-divider>
@@ -133,8 +139,6 @@
               `Заявка на аккредитацию №${this.$route.params.id}`,
             )
             this.$refs.buttonLoadArchive.click()
-
-            window.URL.revokeObjectURL(objectUrl)
           })
           .catch((e) => {
             this.loadingArchive = false
