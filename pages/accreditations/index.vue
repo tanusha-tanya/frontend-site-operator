@@ -8,7 +8,7 @@
     <v-card
       v-for="item of items"
       :key="item.id"
-      :disabled="item.status.id !== 'uc'"
+      :disabled="item.status.id !== 'accepted'"
       class="mb-3"
       outlined
     >
@@ -60,7 +60,7 @@
     data() {
       return {
         currentPage: 1,
-        perPage: 20,
+        perPage: 14,
         totalPages: 0,
         items: null,
       }
@@ -69,7 +69,8 @@
       this.startGlobalPreloader()
       this.getAccreditationList(this.currentPage)
         .then((response) => {
-          this.items = response.data
+          this.items = response.data.items
+          this.totalPages = Math.ceil(response.data.total / this.perPage)
           this.stopGlobalPreloader()
         })
         .catch((error) => {
@@ -83,14 +84,6 @@
             console.log(error.response.status)
           }
         })
-      this.getAccreditationTotal()
-        .then((response) => {
-          this.totalPages = Math.ceil(response.data.total / this.perPage)
-        })
-        .catch((error) => {
-          this.totalPages = 0
-          console.log(error)
-        })
     },
     methods: {
       ...mapActions(['startGlobalPreloader', 'stopGlobalPreloader']),
@@ -99,7 +92,8 @@
         this.currentPage = pagination
         this.getAccreditationList(this.currentPage)
           .then((response) => {
-            this.items = response.data
+            this.items = response.data.items
+            this.totalPages = Math.ceil(response.data.total / this.perPage)
             this.stopGlobalPreloader()
           })
           .catch((error) => {
@@ -127,13 +121,13 @@
     flex-shrink: 0;
     padding: 12px 0 0 12px;
     font-weight: bold;
-    &--uc {
+    &--accepted {
       color: $colorTurquoiseHover;
     }
-    &--e {
+    &--inaccurate {
       color: $colorRed;
     }
-    &--c {
+    &--closed {
       color: $colorGreen;
     }
   }
