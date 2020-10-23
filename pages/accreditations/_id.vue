@@ -40,13 +40,12 @@
       <v-list-item>
         <v-list-item-content>
           <div>Документы</div>
-          <v-list-item-subtitle>
-            <ul>
-              <li v-for="document in item.documents" :key="document.type">
-                <a :href="document.file.url">{{ document.file.name }}</a>
-              </li>
-            </ul>
-          </v-list-item-subtitle>
+          <file
+            v-for="file of item.documents"
+            :key="file.file.type"
+            :name="file.file.name"
+            :url="file.file.url"
+          />
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
@@ -85,9 +84,13 @@
   import formatDate from '../../plugins/mixins/formatDate'
 
   import api from '../../plugins/mixins/api'
+  import file from '../../components/blocks/file'
 
   export default {
     name: 'AccreditationItem',
+    components: {
+      file,
+    },
     mixins: [api, formatDate],
     data() {
       return {

@@ -80,24 +80,12 @@
       <v-list-item>
         <v-list-item-content>
           <div>Документы</div>
-          <div
+          <file
             v-for="file of item.documents.certificate"
             :key="file.url"
-            class="file-container"
-          >
-            <v-icon>mdi-file</v-icon>
-            <a :href="file.url" v-html="file.name"></a>
-            <v-tooltip right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn color="primary" icon v-bind="attrs" v-on="on">
-                  <v-icon color="grey lighten-1">
-                    mdi-information-outline
-                  </v-icon>
-                </v-btn>
-              </template>
-              <span>Всплывающая подсказка</span>
-            </v-tooltip>
-          </div>
+            :name="file.name"
+            :url="file.url"
+          />
         </v-list-item-content>
       </v-list-item>
       <template v-if="item.status.id === 'new'">
@@ -142,9 +130,13 @@
   import formatDate from '../../plugins/mixins/formatDate'
 
   import api from '../../plugins/mixins/api'
+  import file from '../../components/blocks/file'
 
   export default {
     name: 'CatalogPositionItem',
+    components: {
+      file,
+    },
     mixins: [api, formatDate],
     data() {
       return {
@@ -270,38 +262,6 @@
     }
     &--approved {
       color: $colorGreen;
-    }
-  }
-  .file-container {
-    display: flex;
-    margin: 15px 0;
-    + .file-container {
-      margin-top: 0;
-    }
-    .v-icon.mdi-file {
-      margin: 4px 9px 4px 0;
-    }
-    a {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
-    &__file-min {
-      flex: none;
-    }
-    &__name {
-      display: flex;
-      align-items: center;
-      margin-left: 15px;
-    }
-    &__label {
-      color: #a7a7a7;
-      &--active {
-        color: #000;
-      }
-    }
-    .error--text ~ .file-container__label {
-      color: #d50000;
     }
   }
 </style>

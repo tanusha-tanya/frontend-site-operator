@@ -5,13 +5,7 @@
         <span class="text-h4">Список заявок на аккредитацию</span>
       </v-col>
     </v-row>
-    <v-card
-      v-for="item of items"
-      :key="item.id"
-      :disabled="item.status.id !== 'accepted'"
-      class="mb-3"
-      outlined
-    >
+    <v-card v-for="item of items" :key="item.id" class="mb-3" outlined>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
