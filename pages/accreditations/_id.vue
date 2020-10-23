@@ -187,18 +187,41 @@
           color="primary"
         ></v-progress-circular>
       </v-list-item>
+      <v-list-item class="mb-8" v-if="item.status.id !== 'moderated'">
+        <div>
+          <div>Коментарий:</div>
+          <div>
+            {{ item.comment }}
+          </div>
+        </div>
+      </v-list-item>
       <template v-if="item.status.id === 'moderated'">
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
-            <v-card-actions>
+            <v-card-actions style="align-items: flex-start">
               <v-btn
                 color="primary"
                 :disabled="isDisabledAcceptButton"
                 @click="setApprove"
                 >Подтвердить</v-btn
               >
-              <v-btn color="error" @click="setError">Отклонить</v-btn>
+              <div class="ml-4" style="max-width: 400px; width: 100%">
+                <v-btn
+                  color="error"
+                  :disabled="!textRejection"
+                  @click="setError"
+                >
+                  Отклонить
+                </v-btn>
+                <v-textarea
+                  v-model="textRejection"
+                  class="mt-2"
+                  outlined
+                  label="Причина отклонения"
+                  required
+                ></v-textarea>
+              </div>
             </v-card-actions>
           </v-list-item-content>
         </v-list-item>
@@ -233,6 +256,7 @@
         archiveLink: '',
         showAgreement: false,
         showRpn: false,
+        textRejection: '',
       }
     },
     computed: {
@@ -256,7 +280,7 @@
           this.getAccreditationItem(this.$route.params.id)
             .then((response) => {
               this.item = response.data
-              this.getRegisteredCompany()
+              this.getRegisteredCompany(this.item.entity_id)
                 .then((response) => {
                   this.company = response.data
                 })
@@ -386,7 +410,11 @@
       },
       setError() {
         this.startGlobalPreloader()
-        this.setAccreditationStatus(this.$route.params.id, 'inaccurate')
+        this.setAccreditationStatus(
+          this.$route.params.id,
+          'inaccurate',
+          this.textRejection,
+        )
           .then((response) => {
             if (response.success === true) {
               this.item = response.data

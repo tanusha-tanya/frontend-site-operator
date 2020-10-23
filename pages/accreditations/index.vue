@@ -54,7 +54,7 @@
     data() {
       return {
         currentPage: 1,
-        perPage: 15,
+        perPage: 20,
         totalPages: 0,
         items: null,
       }
