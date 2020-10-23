@@ -43,8 +43,12 @@
           <file
             v-for="file of item.documents"
             :key="file.file.type"
+            :label="getFilesLabel(file.file.type)"
             :name="file.file.name"
             :url="file.file.url"
+            :readonly="item.status.id !== 'moderated'"
+            :accreditation-file="file.file.accepted"
+            @clickAccreditation="accreditationFile(file.file)"
           />
         </v-list-item-content>
       </v-list-item>
@@ -99,6 +103,7 @@
         alertError: false,
         isLoadedArchive: false,
         loadingArchive: false,
+        filesSampleRequired: null,
       }
     },
     validate({ params }) {
@@ -106,25 +111,67 @@
     },
     created() {
       this.startGlobalPreloader()
-      this.getAccreditationItem(this.$route.params.id)
+      this.getAccreditationSampleRequiredFiles()
         .then((response) => {
-          this.item = response.data
-          this.stopGlobalPreloader()
-        })
-        .catch((error) => {
-          this.item = null
-          this.stopGlobalPreloader()
-          if (error.response.status === 404 || error.response.status === 400) {
-            return this.$nuxt.error({
-              statusCode: 404,
+          this.filesSampleRequired = response.data
+          this.getAccreditationItem(this.$route.params.id)
+            .then((response) => {
+              this.item = response.data
+              this.stopGlobalPreloader()
             })
-          } else {
-            console.log(error.response.status)
-          }
+            .catch((error) => {
+              this.item = null
+              this.stopGlobalPreloader()
+              if (
+                error.response.status === 404 ||
+                error.response.status === 400
+              ) {
+                return this.$nuxt.error({
+                  statusCode: 404,
+                })
+              } else {
+                console.log(error.response.status)
+              }
+            })
+        })
+        .catch((e) => {
+          console.log(e)
         })
     },
     methods: {
       ...mapActions(['startGlobalPreloader', 'stopGlobalPreloader']),
+      accreditationFile(file) {
+        this.startGlobalPreloader()
+        if (file.accepted) {
+          this.declineAccreditationsFile(this.$route.params.id, file.type)
+            .then(() => {
+              file.accepted = false
+              this.stopGlobalPreloader()
+            })
+            .catch((e) => {
+              console.log(e)
+              this.stopGlobalPreloader()
+            })
+        } else {
+          this.acceptAccreditationsFile(this.$route.params.id, file.type)
+            .then(() => {
+              file.accepted = true
+              this.stopGlobalPreloader()
+            })
+            .catch((e) => {
+              console.log(e)
+              this.stopGlobalPreloader()
+            })
+        }
+      },
+      getFilesLabel(type) {
+        for (const key in this.filesSampleRequired) {
+          if (this.filesSampleRequired[key].id === type) {
+            return this.filesSampleRequired[key].value
+          }
+        }
+        return type
+      },
       downloadArchive() {
         this.loadingArchive = true
         this.getAccreditationFilesZipArchive(this.$route.params.id)

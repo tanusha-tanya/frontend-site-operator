@@ -25,12 +25,27 @@ export default {
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/`,
       )
     },
+    getAccreditationSampleRequiredFiles() {
+      return this.$axios.$get(
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/files/`,
+      )
+    },
     setAccreditationStatus(id, status = 'uc') {
       return this.$axios.$patch(
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/`,
         {
           status,
         },
+      )
+    },
+    acceptAccreditationsFile(id, document) {
+      return this.$axios.$post(
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/document/accepted/${document}/`,
+      )
+    },
+    declineAccreditationsFile(id, document) {
+      return this.$axios.$delete(
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/document/accepted/${document}/`,
       )
     },
     getCatalogPositionList(page = undefined) {

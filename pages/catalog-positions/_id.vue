@@ -83,6 +83,7 @@
           <file
             v-for="file of item.documents.certificate"
             :key="file.url"
+            label="Сертификат"
             :name="file.name"
             :url="file.url"
           />
