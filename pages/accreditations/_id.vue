@@ -187,7 +187,7 @@
           color="primary"
         ></v-progress-circular>
       </v-list-item>
-      <v-list-item class="mb-8" v-if="item.status.id !== 'moderated'">
+      <v-list-item v-if="item.status.id === 'revision'" class="mb-8">
         <div>
           <div>Коментарий:</div>
           <div>
@@ -412,7 +412,7 @@
         this.startGlobalPreloader()
         this.setAccreditationStatus(
           this.$route.params.id,
-          'inaccurate',
+          'revision',
           this.textRejection,
         )
           .then((response) => {
