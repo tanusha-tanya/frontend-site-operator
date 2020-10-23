@@ -25,12 +25,28 @@ export default {
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/`,
       )
     },
-    setAccreditationStatus(id, status = 'uc') {
+    getAccreditationSampleRequiredFiles() {
+      return this.$axios.$get(
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/files/`,
+      )
+    },
+    setAccreditationStatus(id, status = null, comment = null) {
       return this.$axios.$patch(
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/`,
         {
           status,
+          comment,
         },
+      )
+    },
+    acceptAccreditationsFile(id, document) {
+      return this.$axios.$post(
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/document/accepted/${document}/`,
+      )
+    },
+    declineAccreditationsFile(id, document) {
+      return this.$axios.$delete(
+        `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/${id}/document/accepted/${document}/`,
       )
     },
     getCatalogPositionList(page = undefined) {
@@ -53,7 +69,7 @@ export default {
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/products/${id}/`,
       )
     },
-    setCatalogPositionStatus(id, status = 'uc', text_rejection = null) {
+    setCatalogPositionStatus(id, status = null, text_rejection = null) {
       return this.$axios.$post(
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/products/${id}/`,
         {
@@ -63,7 +79,6 @@ export default {
       )
     },
     getRegisteredCompany(id) {
-      id = 2 // todo remove
       return this.$axios.$get(
         `${this.$store.state.env.API_URL_AUTH_SERVICE}/data/companies/${id}`,
       )

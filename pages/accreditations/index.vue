@@ -5,13 +5,7 @@
         <span class="text-h4">Список заявок на аккредитацию</span>
       </v-col>
     </v-row>
-    <v-card
-      v-for="item of items"
-      :key="item.id"
-      :disabled="item.status.id !== 'accepted'"
-      class="mb-3"
-      outlined
-    >
+    <v-card v-for="item of items" :key="item.id" class="mb-3" outlined>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
@@ -60,7 +54,7 @@
     data() {
       return {
         currentPage: 1,
-        perPage: 14,
+        perPage: 20,
         totalPages: 0,
         items: null,
       }
@@ -121,10 +115,13 @@
     flex-shrink: 0;
     padding: 12px 0 0 12px;
     font-weight: bold;
-    &--accepted {
+    &--moderated {
       color: $colorTurquoiseHover;
     }
-    &--inaccurate {
+    //&--inaccurate {
+    //  color: $colorRed;
+    //}
+    &--revision {
       color: $colorRed;
     }
     &--closed {
