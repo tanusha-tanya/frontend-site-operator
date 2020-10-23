@@ -10,7 +10,7 @@
     <v-alert :value="alertError" type="error" transition="scroll-y-transition">
       Ошибка: новый статус не сохранён
     </v-alert>
-    <v-card v-if="!!item" outlined>
+    <v-card v-if="!!item && item.status.id !== 'accepted'" outlined>
       <v-list-item>
         <v-list-item-content>
           <v-row>
@@ -52,27 +52,49 @@
           />
         </v-list-item-content>
       </v-list-item>
-      <v-list-item>
-        <a v-if="!isLoadedArchive && !loadingArchive" @click="downloadArchive">
+      <v-list-item class="mb-8">
+        <v-btn
+          v-if="!isLoadedArchive"
+          ref="buttonLoadArchive"
+          color="primary"
+          :href="archiveLink"
+          :disabled="loadingArchive"
+          :download="`Заявка на аккредитацию №${this.$route.params.id}`"
+          @click="downloadArchive"
+        >
+          <v-icon left dark>mdi-download</v-icon>
           Скачать документы
-        </a>
-        <a v-show="isLoadedArchive" ref="buttonLoadArchive">
+        </v-btn>
+        <v-btn
+          v-show="isLoadedArchive"
+          ref="buttonLoadArchive"
+          color="primary"
+          :href="archiveLink"
+          :download="`Заявка на аккредитацию №${this.$route.params.id}`"
+        >
+          <v-icon left dark>mdi-download</v-icon>
           Скачать документы
-        </a>
+        </v-btn>
         <v-progress-circular
           v-if="loadingArchive"
+          class="ml-2"
           indeterminate
-          :size="12"
+          :size="30"
           :width="2"
           color="primary"
         ></v-progress-circular>
       </v-list-item>
-      <template v-if="item.status.id === 'accepted'">
+      <template v-if="item.status.id === 'moderated'">
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
             <v-card-actions>
-              <v-btn color="primary" @click="setApprove">Подтвердить</v-btn>
+              <v-btn
+                color="primary"
+                :disabled="isDisabledAcceptButton"
+                @click="setApprove"
+                >Подтвердить</v-btn
+              >
               <v-btn color="error" @click="setError">Отклонить</v-btn>
             </v-card-actions>
           </v-list-item-content>
@@ -104,7 +126,18 @@
         isLoadedArchive: false,
         loadingArchive: false,
         filesSampleRequired: null,
+        archiveLink: '',
       }
+    },
+    computed: {
+      isDisabledAcceptButton() {
+        if (this.item && this.item.documents) {
+          return this.item.documents
+            .map((doc) => doc.file.accepted)
+            .includes(false)
+        }
+        return false
+      },
     },
     validate({ params }) {
       return /^\d+$/.test(params.id)
@@ -117,7 +150,19 @@
           this.getAccreditationItem(this.$route.params.id)
             .then((response) => {
               this.item = response.data
-              this.stopGlobalPreloader()
+              if (this.item.status.id === 'accepted') {
+                this.setAccreditationStatus(this.$route.params.id, 'moderated')
+                  .then((response) => {
+                    this.item.status = response.data.status
+                    this.stopGlobalPreloader()
+                  })
+                  .catch((e) => {
+                    console.log(e)
+                    this.stopGlobalPreloader()
+                  })
+              } else {
+                this.stopGlobalPreloader()
+              }
             })
             .catch((error) => {
               this.item = null
@@ -183,12 +228,13 @@
 
             console.log(this.$refs.buttonLoadArchive)
 
-            this.$refs.buttonLoadArchive.setAttribute('href', objectUrl)
-            this.$refs.buttonLoadArchive.setAttribute(
-              'download',
-              `Заявка на аккредитацию №${this.$route.params.id}`,
-            )
-            this.$refs.buttonLoadArchive.click()
+            this.archiveLink = objectUrl
+
+            setTimeout(() => {
+              this.$refs.buttonLoadArchive.$el.click()
+              this.loadingArchive = false
+              this.isLoadedArchive = true
+            }, 1000)
           })
           .catch((e) => {
             this.loadingArchive = false
@@ -264,7 +310,7 @@
     flex-shrink: 0;
     padding-left: 12px;
     font-weight: bold;
-    &--accepted {
+    &--moderated {
       color: $colorTurquoiseHover;
     }
     &--closed {

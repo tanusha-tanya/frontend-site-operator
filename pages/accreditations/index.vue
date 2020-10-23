@@ -54,7 +54,7 @@
     data() {
       return {
         currentPage: 1,
-        perPage: 14,
+        perPage: 15,
         totalPages: 0,
         items: null,
       }
@@ -115,7 +115,7 @@
     flex-shrink: 0;
     padding: 12px 0 0 12px;
     font-weight: bold;
-    &--accepted {
+    &--moderated {
       color: $colorTurquoiseHover;
     }
     &--inaccurate {
