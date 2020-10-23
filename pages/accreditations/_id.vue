@@ -26,7 +26,7 @@
               </v-btn>
             </v-col>
           </v-row>
-          <v-list-item-title class="headline mb-1">
+          <v-list-item-title class="headline mt-2 mb-1">
             Заявка на аккредитацию №{{ item.id }}
           </v-list-item-title>
           <v-list-item-subtitle>
@@ -37,8 +37,111 @@
           {{ item.status.value }}
         </div>
       </v-list-item>
+      <v-list-item class="mt-4">
+        <div style="width: 100%">
+          <div
+            v-ripple="!showAgreement"
+            class="accreditation-card elevation-3"
+            :class="{ 'accreditation-card--pointer': !showAgreement }"
+            @click="showAgreement = true"
+          >
+            <div class="accreditation-card__title text-h5">
+              Соглашение с оператором торгов
+            </div>
+            <slide-up-down :active="showAgreement" :duration="500">
+              <div>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Maecenas bibendum mattis nisi, vel convallis turpis maximus sit
+                amet. Proin vitae ipsum ante. Ut efficitur tortor vel mi
+                pharetra, sed elementum nibh congue. Nulla et tincidunt turpis,
+                a vulputate erat. Sed a viverra urna, non cursus purus.
+                Suspendisse consectetur id felis sit amet eleifend. Donec
+                accumsan ac neque et interdum. Curabitur lobortis tristique
+                ultricies. Nam id rhoncus enim.
+              </div>
+            </slide-up-down>
+            <div class="accreditation-card__info mt-8">
+              <div class="accreditation-card__status">Подписано</div>
+              <v-slide-y-transition>
+                <div
+                  v-if="showAgreement"
+                  class="accreditation-card__close"
+                  @click.stop="showAgreement = false"
+                >
+                  Скрыть полный текст
+                </div>
+              </v-slide-y-transition>
+              <!--              <v-btn color="success">Подписать Электронной подписью</v-btn>-->
+            </div>
+          </div>
+          <div
+            v-ripple="!showRpn"
+            class="accreditation-card elevation-3 mt-8"
+            :class="{ 'accreditation-card--pointer': !showRpn }"
+            @click="showRpn = true"
+          >
+            <div class="accreditation-card__title text-h5">
+              Подтверждение отсутствия в РПН
+            </div>
+            <slide-up-down :active="showRpn" :duration="500">
+              <div>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Maecenas bibendum mattis nisi, vel convallis turpis maximus sit
+                amet. Proin vitae ipsum ante. Ut efficitur tortor vel mi
+                pharetra, sed elementum nibh congue. Nulla et tincidunt turpis,
+                a vulputate erat. Sed a viverra urna, non cursus purus.
+                Suspendisse consectetur id felis sit amet eleifend. Donec
+                accumsan ac neque et interdum. Curabitur lobortis tristique
+                ultricies. Nam id rhoncus enim.
+              </div>
+            </slide-up-down>
+            <div class="accreditation-card__info mt-8">
+              <div class="accreditation-card__status">Подписано</div>
+              <v-slide-y-transition>
+                <div
+                  v-if="showRpn"
+                  class="accreditation-card__close"
+                  @click.stop="showRpn = false"
+                >
+                  Скрыть полный текст
+                </div>
+              </v-slide-y-transition>
+              <!--              <v-btn color="success">Подписать Электронной подписью</v-btn>-->
+            </div>
+          </div>
+        </div>
+      </v-list-item>
       <v-list-item>
-        <v-list-item-content>
+        <v-list-item-content class="mt-4">
+          <div>Аккредитовать как:</div>
+          <div class="checkbox-container mt-2">
+            <v-checkbox
+              v-model="item.provider_accreditation"
+              class="mt-0"
+              label="Поставщик"
+              hide-details
+              :disabled="true"
+            ></v-checkbox>
+          </div>
+          <div class="checkbox-container mt-2">
+            <v-checkbox
+              v-model="item.customer_accreditation"
+              class="mt-0"
+              label="Поставщик"
+              hide-details
+              :disabled="true"
+            ></v-checkbox>
+          </div>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-content class="mt-4">
+          <div>Юридическое лицо</div>
+          <div v-if="company" class="company-name mt-2">{{ company.name }}</div>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-content style="margin-right: 10px">
           <div>Документы</div>
           <file
             v-for="file of item.documents"
@@ -121,12 +224,15 @@
     data() {
       return {
         item: null,
+        company: null,
         alertSuccess: false,
         alertError: false,
         isLoadedArchive: false,
         loadingArchive: false,
         filesSampleRequired: null,
         archiveLink: '',
+        showAgreement: false,
+        showRpn: false,
       }
     },
     computed: {
@@ -150,6 +256,13 @@
           this.getAccreditationItem(this.$route.params.id)
             .then((response) => {
               this.item = response.data
+              this.getRegisteredCompany()
+                .then((response) => {
+                  this.company = response.data
+                })
+                .catch((e) => {
+                  console.log(e)
+                })
               if (this.item.status.id === 'accepted') {
                 this.setAccreditationStatus(this.$route.params.id, 'moderated')
                   .then((response) => {
@@ -319,5 +432,39 @@
     &--inaccurate {
       color: $colorRed;
     }
+  }
+  .accreditation-card {
+    transition: 0.3s background-color;
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+    background-color: #fff;
+    &--pointer {
+      cursor: pointer;
+      &:hover {
+        background-color: #f8fbff;
+      }
+    }
+    &__info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    &__close {
+      transition: 0.3s;
+      cursor: pointer;
+      text-decoration: underline;
+      &:hover {
+        color: #00b8d4;
+      }
+    }
+  }
+  .checkbox-container {
+    .v-input--checkbox {
+      display: inline-flex;
+    }
+  }
+  .company-name {
+    color: #a7a7a7;
   }
 </style>
