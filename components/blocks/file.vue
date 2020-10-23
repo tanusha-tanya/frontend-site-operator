@@ -10,9 +10,11 @@
       </template>
       <span>Всплывающая подсказка</span>
     </v-tooltip>
-    <a class="file-container__link" :href="url" target="_blank" download>
-      {{ name }}
-    </a>
+    <div class="file-container__link-container">
+      <a class="file-container__link" :href="url" target="_blank" download>
+        {{ name }}
+      </a>
+    </div>
     <v-btn color="primary" icon :href="url" target="_blank">
       <v-icon color="grey lighten-1"> mdi-eye </v-icon>
     </v-btn>
@@ -62,17 +64,22 @@
     display: flex;
     margin: 15px 0;
     align-items: center;
+    &:hover {
+      background-color: #f5ffff;
+    }
     + .file-container {
       margin-top: 0;
     }
     .v-icon.mdi-file {
       margin: 4px 9px 4px 0;
     }
+    &__link-container {
+      flex: auto;
+    }
     &__link {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       cursor: pointer;
-      flex: auto;
     }
     &__file-min {
       flex: none;
