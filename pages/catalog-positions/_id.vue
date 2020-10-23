@@ -156,7 +156,7 @@
       this.getCatalogPositionItem(this.$route.params.id)
         .then((response) => {
           this.item = response.data
-          this.getRegisteredCompany(this.item.entity_id)
+          this.getRegisteredCompany(this.item.company_id)
             .then((response) => {
               this.company = response.data
               this.stopGlobalPreloader()
