@@ -457,7 +457,10 @@
     &--closed {
       color: $colorGreen;
     }
-    &--inaccurate {
+    //&--inaccurate {
+    // color: $colorRed;
+    //}
+    &--revision {
       color: $colorRed;
     }
   }

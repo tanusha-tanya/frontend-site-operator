@@ -118,7 +118,10 @@
     &--moderated {
       color: $colorTurquoiseHover;
     }
-    &--inaccurate {
+    //&--inaccurate {
+    //  color: $colorRed;
+    //}
+    &--revision {
       color: $colorRed;
     }
     &--closed {
