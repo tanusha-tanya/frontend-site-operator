@@ -106,6 +106,12 @@ export default {
       callback: '/login',
       home: '/',
     },
+    cookie: {
+      prefix: 'oper.',
+      options: {
+        path: '/',
+      },
+    },
   },
   router: {
     middleware: ['auth'],
