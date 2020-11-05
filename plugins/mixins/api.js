@@ -1,15 +1,37 @@
 export default {
   methods: {
-    getAccreditationList(page = undefined) {
-      const fData = new FormData()
+    getAccreditationList(props = {}) {
+      const defaultProps = {
+        orderBy: 'id',
+        orderDir: 'DESC',
+        page: 1,
+        filterString: '',
+      }
 
-      fData.append('page', page)
-      fData.append('order[by]', 'id')
-      fData.append('order[direction]', 'ASC')
+      const requestProps = Object.assign(defaultProps, props)
+
+      console.log(props)
+
+      const fData = new FormData()
+      fData.append('page', requestProps.page)
+      fData.append('order[by]', requestProps.orderBy)
+      fData.append('order[direction]', requestProps.orderDir)
+      if (requestProps.filterString !== '')
+        fData.append('q', requestProps.filterString)
 
       return this.$axios.$post(
         `${this.$store.state.env.API_URL_OPERATOR_SERVICE}/api/accreditation/list/`,
         fData,
+      )
+    },
+    fetchCompanysByIds(ids) {
+      return this.$axios.$get(
+        `${this.$store.state.env.API_URL_AUTH_SERVICE}/data/companies`,
+        {
+          params: {
+            ids: ids.join(','),
+          },
+        },
       )
     },
     getAccreditationFilesZipArchive(id) {
