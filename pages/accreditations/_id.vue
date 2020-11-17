@@ -195,7 +195,7 @@
           </div>
         </div>
       </v-list-item>
-      <template v-if="item.status.id === 'moderated'">
+      <template v-if="item.status.id === 'moderation'">
         <v-divider></v-divider>
         <v-list-item>
           <v-list-item-content>
@@ -204,7 +204,7 @@
                 color="primary"
                 :disabled="isDisabledAcceptButton"
                 @click="setApprove"
-                >Подтвердить</v-btn
+                >Одобрить</v-btn
               >
               <div class="ml-4" style="max-width: 400px; width: 100%">
                 <v-btn
@@ -212,7 +212,7 @@
                   :disabled="!textRejection"
                   @click="setError"
                 >
-                  Отклонить
+                  На доработку
                 </v-btn>
                 <v-textarea
                   v-model="textRejection"
@@ -288,7 +288,7 @@
                   console.log(e)
                 })
               if (this.item.status.id === 'accepted') {
-                this.setAccreditationStatus(this.$route.params.id, 'moderated')
+                this.setAccreditationStatus(this.$route.params.id, 'moderation')
                   .then((response) => {
                     this.item.status = response.data.status
                     this.stopGlobalPreloader()
@@ -451,7 +451,7 @@
     flex-shrink: 0;
     padding-left: 12px;
     font-weight: bold;
-    &--moderated {
+    &--moderation {
       color: $colorTurquoiseHover;
     }
     &--closed {

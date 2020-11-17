@@ -222,17 +222,17 @@
   .v-card-status {
     flex-shrink: 0;
     padding-left: 12px;
-    &--inaccurate {
-      color: $colorRed;
-    }
-    &--revision {
-      color: $colorRed;
+    &--moderation {
+      color: $colorTurquoiseHover;
     }
     &--closed {
       color: $colorGreen;
     }
-    &--accepted {
-      color: $colorTurquoiseHover;
+    //&--inaccurate {
+    // color: $colorRed;
+    //}
+    &--revision {
+      color: $colorRed;
     }
   }
   .card-link {
