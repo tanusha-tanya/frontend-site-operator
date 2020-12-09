@@ -5,13 +5,7 @@
         <span class="text-h4">Заявки на добавление позиции в каталог</span>
       </v-col>
     </v-row>
-    <v-card
-      v-for="item of items"
-      :key="item.id"
-      :disabled="item.status.id !== 'new'"
-      class="mb-3"
-      outlined
-    >
+    <v-card v-for="item of items" :key="item.id" class="mb-3" outlined>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="headline mb-1">
@@ -30,7 +24,7 @@
             <v-list-item-subtitle>Маркоразмер</v-list-item-subtitle>
             <v-list-item-title v-html="item.mark_size"></v-list-item-title>
           </v-list-item-content>
-          <v-list-item-content>
+          <v-list-item-content v-if="item.mark_size_voltage">
             <v-list-item-subtitle>
               Номинальное напряжение
             </v-list-item-subtitle>
