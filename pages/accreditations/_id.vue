@@ -149,7 +149,7 @@
             :label="getFilesLabel(file.file.type)"
             :name="file.file.name"
             :url="file.file.url"
-            :readonly="item.status.id !== 'moderated'"
+            :readonly="item.status.id !== 'moderation'"
             :accreditation-file="file.file.accepted"
             @clickAccreditation="accreditationFile(file.file)"
           />

@@ -85,13 +85,13 @@ export default {
       local: {
         endpoints: {
           login: {
-            url: `${process.env.API_URL_AUTH_SERVICE}/auth/signin`,
+            url: `${process.env.API_URL_AUTH_SERVICE}/user/signin`,
             method: 'post',
             propertyName: 'data.token',
           },
           // logout: { url: '/api/auth/logout', method: 'post' },
           user: {
-            url: `${process.env.API_URL_AUTH_SERVICE}/auth/me`,
+            url: `${process.env.API_URL_AUTH_SERVICE}/user/me`,
             method: 'get',
             propertyName: 'data',
           },
