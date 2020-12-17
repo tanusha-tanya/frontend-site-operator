@@ -205,7 +205,7 @@
           this.companiesLoading = true
           await this.fetchCompanysByIds(updateIds).then((response) => {
             this.companiesLoading = false
-            response.data.forEach((item) => {
+            response.data.elements.forEach((item) => {
               this.companies[item.id] = item
             })
           })

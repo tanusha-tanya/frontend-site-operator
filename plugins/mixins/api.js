@@ -26,7 +26,7 @@ export default {
     },
     fetchCompanysByIds(ids) {
       return this.$axios.$get(
-        `${this.$store.state.env.API_URL_AUTH_SERVICE}/data/companies`,
+        `${this.$store.state.env.API_URL_AUTH_SERVICE}/companies`,
         {
           params: {
             ids: ids.join(','),
@@ -102,7 +102,7 @@ export default {
     },
     getRegisteredCompany(id) {
       return this.$axios.$get(
-        `${this.$store.state.env.API_URL_AUTH_SERVICE}/data/companies/${id}`,
+        `${this.$store.state.env.API_URL_AUTH_SERVICE}/companies/${id}`,
       )
     },
   },
